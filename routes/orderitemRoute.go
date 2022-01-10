@@ -9,7 +9,7 @@ func OrderItemRoutes (incomingRoutes *gin.Engine){
 	incomingRoutes.GET("/orderItems", controllers.GetOrderItems())
 	incomingRoutes.GET("/orderItems/:orderItems_id", controllers.GetOrderItem())
 	incomingRoutes.POST("/orderItems", controllers.CreateOrderItem())
-	incomingRoutes.PATCH("/orderItems/:orderItem_id", controllers.UpdateorderItem())
+	incomingRoutes.PATCH("/orderItems/:orderItem_id", controllers.UpdateOrderItem())
 	incomingRoutes.GET("/orderItems-order/:order_id", controllers.GetOrderItemsByOrder())
 
 }
