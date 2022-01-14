@@ -72,11 +72,11 @@ func GetInvoice() gin.HandlerFunc{
 			invoiceView.Payment_due_date = invoice.Payment_due_date
 
 			invoiceView.Payment_method = "null"
-			if invoice.Payment_method != "" {
-				invoiceView.Payment_method = *&invoice.Payment_method
+			if invoice.Payment_method != nil  {
+				invoiceView.Payment_method = *invoice.Payment_method
 			}
 			invoiceView.Invoice_id = invoice.Invoice_id
-			invoiceView.Payment_status = *&invoice.Payment_status 
+			invoiceView.Payment_status = *invoice.Payment_status 
 			invoiceView.Payment_due = allOrderItems[0]["payment_due"]
 			invoiceView.Table_number = allOrderItems[0]["table_number"]
 			invoiceView.Order_details = allOrderItems[0]["order_item"]
@@ -106,8 +106,8 @@ func CreateInvoice() gin.HandlerFunc{
 			return
 		}
 		status := "PENDING"
-		if  invoice.Payment_status == "" {
-			invoice.Payment_status = status
+		if  invoice.Payment_status == nil  {
+			invoice.Payment_status = &status
 		}
 
 		invoice.Payment_due_date,_ = time.Parse(time.RFC3339,time.Now().Format(time.RFC3339))
@@ -148,11 +148,11 @@ func UpdateInvoice() gin.HandlerFunc{
 		
 		var updateObj primitive.D
 		 
-		if invoice.Payment_method != "" {
+		if invoice.Payment_method != nil  {
 			updateObj = append(updateObj, bson.E{"payment_method", invoice.Payment_method})
 		}
 
-		if invoice.Payment_status != "" {
+		if invoice.Payment_status != nil {
 			updateObj = append(updateObj, bson.E{"payment_status", invoice.Payment_status})
 		}
 
@@ -167,8 +167,8 @@ func UpdateInvoice() gin.HandlerFunc{
 
 		status := "PENDING"
 
-		if invoice.Payment_status == "" {
-			invoice.Payment_status = status
+		if invoice.Payment_status == nil  {
+			invoice.Payment_status = &status
 		}
 		result, err := invoiceCollection.UpdateOne(
 			ctx,
