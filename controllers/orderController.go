@@ -89,7 +89,7 @@ func CreateOrder() gin.HandlerFunc{
 			result, insertErr := orderCollection.InsertOne(ctx, order)
 
 			if insertErr != nil{
-				msg := fmt.Sprintf("oder item was not created")
+				msg := fmt.Sprintf("order item was not created")
 				c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 				return
 			}
@@ -114,7 +114,7 @@ func UpdateOrder() gin.HandlerFunc{
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		if order.Table_id != "" {
+		if order.Table_id != nil  {
 			err:= menuCollection.FindOne(ctx, bson.M{"table_id": order.Table_id}).Decode(&table)
 			defer cancel()
 			if err != nil {
