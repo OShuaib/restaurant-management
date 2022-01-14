@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"restaurant-management/database"
@@ -14,6 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"golang.org/x/crypto/bcrypt"
 )
 
 
@@ -188,11 +190,20 @@ func Login() gin.HandlerFunc{
 
 
 func HashPassword(password string) string {
-
-	return ""
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	if err != nil {
+		log.Panic(err)
+	}
+	return string(bytes)
 }
 
 func VerifyPassword (userPassword string, providePassword string)(bool, string){
-	
-	return true,""
+	err := bcrypt.CompareHashAndPassword([]byte(providePassword),[]byte(userPassword))
+	check := true
+	msg := ""
+	if err != nil {
+		msg = fmt.Sprintf("login or password is incorrect")
+		check = false
+	}
+	return check, msg
 }
