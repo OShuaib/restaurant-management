@@ -108,8 +108,8 @@ func CreateFood() gin.HandlerFunc{
 		food.Update_at,_ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		food.ID = primitive.NewObjectID()
 		food.Food_id = food.ID.Hex()
-		var num = toFixed(food.Price,2)
-		food.Price = num
+		var num = toFixed(*food.Price,2)
+		food.Price = &num
 
 
 		result, insertErr := foodCollection.InsertOne(ctx,food)
@@ -148,7 +148,7 @@ func UpdateFood() gin.HandlerFunc{
 
 		var updateObj primitive.D
 
-		if food.Name != "" {
+		if food.Name != nil {
 			updateObj = append(updateObj, bson.E{"name", food.Name})
 		}
 
@@ -156,7 +156,7 @@ func UpdateFood() gin.HandlerFunc{
 			updateObj = append(updateObj, bson.E{"price", food.Price})
 		}
 
-		if food.Food_image != "" {
+		if food.Food_image != nil {
 			updateObj = append(updateObj, bson.E{"food_image", food.Food_image})
 		}
 
