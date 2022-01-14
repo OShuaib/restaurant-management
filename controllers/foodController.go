@@ -55,7 +55,7 @@ func GetFoods() gin.HandlerFunc{
 		startIndex, err = strconv.Atoi(c.Query("startIndex"))
 
 		matchStage := bson.D{{"$match", bson.D{{}}}}
-		groupStage := bson.D{{"$group", bson.D{{"_id", bson.D{{"_id", "null"}}},{"total_count", bson.D{{"$sum","1"}}},{"data", bson.D{{"$push","$$ROOT"}}} }}}
+		groupStage := bson.D{{"$group", bson.D{{"_id", bson.D{{"_id", "null"}}},{"total_count", bson.D{{"$sum",1}}},{"data", bson.D{{"$push","$$ROOT"}}} }}}
 		projectStage := bson.D{
 			{
 				"$project", bson.D{
@@ -160,7 +160,7 @@ func UpdateFood() gin.HandlerFunc{
 			updateObj = append(updateObj, bson.E{"food_image", food.Food_image})
 		}
 
-		if food.Menu_id != "" {
+		if food.Menu_id != nil {
 			err := menuCollection.FindOne(ctx, bson.M{"menu_id": food.Menu_id}).Decode(&menu)
 			defer cancel()
 			if err!=nil {
