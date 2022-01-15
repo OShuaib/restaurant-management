@@ -3,7 +3,6 @@ package helpers
 import (
 	"context"
 	"fmt"
-	"go/token"
 	"log"
 	"os"
 	"restaurant-management/database"
@@ -34,14 +33,13 @@ func GenerateAllTokens(email string, firstName string, lastName string, uid stri
 		Last_name: lastName,
 		Uid : uid,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(1).Unix()),
+			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(1)).Unix(),
 		},
     }
 
 	refreshClaim :=  &SignedDetails {
 			StandardClaims: jwt.StandardClaims{
-				ExpiresAt : time.Now().Local().Add(time.Minute * time.Duration(30).Unix(),
-			),
+				ExpiresAt : time.Now().Local().Add(time.Minute * time.Duration(30)).Unix(),
 		},	
 	}
 
@@ -101,7 +99,7 @@ func ValidateToken(signedToken string)(claims *SignedDetails, msg string){
 	)
 
 	//token is invalid
-	claims, ok := token.Cliams.(*SignedDetails)
+	claims, ok := token.Claims.(*SignedDetails)
 	if !ok {
 		msg = fmt.Sprintf("the token is invalid")
 		msg = err.Error()
@@ -109,7 +107,7 @@ func ValidateToken(signedToken string)(claims *SignedDetails, msg string){
 	}
 	
 	//token is expired
-	if claims.ExpiresAt = time.Now().Local().Unix() {
+	if claims.ExpiresAt < time.Now().Local().Unix() {
 		msg = fmt.Sprint("token as expired")
 		msg = err.Error()
 		return
