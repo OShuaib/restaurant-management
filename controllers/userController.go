@@ -74,7 +74,7 @@ func GetUser() gin.HandlerFunc {
 		err := userCollection.FindOne(ctx, bson.M{"user_id": userId}).Decode(&user)
 		defer cancel()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error", "error occured while listing user items"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "error occured while listing user items"})
 		}
 
 		c.JSON(http.StatusOK, user)
@@ -133,8 +133,8 @@ func SignUp() gin.HandlerFunc {
 
 		//generate token and refresh token (generate all token from helper)
 		token , refreshToken,_ := helper.GenerateAllTokens(*user.Email, *user.First_name, *user.Last_name, user.User_id)
-		user.Token = &token
-		user.Refresh_Token = &refreshToken 
+		user.Token = token
+		user.Refresh_Token = refreshToken 
 
 		//if all check passed, insert the new user into the user collection
 		resultInsertion, insertErr := userCollection.InsertOne(ctx, user)
